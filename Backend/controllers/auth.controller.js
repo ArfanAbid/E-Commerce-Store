@@ -72,7 +72,7 @@ const RegisterUser=asyncHandler(async(req,res,next)=>{
     
         setCookies(res,accessToken,refreshToken);
     
-        const createdUser=User.findById(user._id).select("-password");
+        const createdUser=await User.findById(user._id).select("-password");
         if(!createdUser){
             throw new ApiError(404,"User not found");
         }
@@ -99,14 +99,14 @@ const LoginUser=asyncHandler(async(req,res,next)=>{
             await storeRefreshToken(user._id,refreshToken);
             setCookies(res,accessToken,refreshToken);
 
-            return res.status(200).json(new ApiResponse(200,{_id,name,email,role},"User logged in successfully"));
+            return res.status(200).json(new ApiResponse(200,{_id:user._id,name:user.name,email:user.email},"User logged in successfully"));
 
         }else{
             throw new ApiError(401,"Invalid email or password");
         }
     } catch (error) {
         console.log("Error in login user",error.message);
-        throw new ApiError(401,error.message);
+        throw new ApiError(500,error.message);
     }
 });
 
