@@ -48,7 +48,7 @@ const setCookies=(res,accessToken,refreshToken)=>{
 }
 
 // API controller for Register User
-
+// Here when using Async Handler, we may not have to use try catch block because of async function handle errors
 const RegisterUser=asyncHandler(async(req,res,next)=>{
     try {
         const {name,email,password}=req.body;
@@ -99,7 +99,7 @@ const LoginUser=asyncHandler(async(req,res,next)=>{
             await storeRefreshToken(user._id,refreshToken);
             setCookies(res,accessToken,refreshToken);
 
-            return res.status(200).json(new ApiResponse(200,{_id:user._id,name:user.name,email:user.email},"User logged in successfully"));
+            return res.status(200).json(new ApiResponse(200,{_id:user._id,name:user.name,email:user.email,role:user.role},"User logged in successfully"));
 
         }else{
             throw new ApiError(401,"Invalid email or password");

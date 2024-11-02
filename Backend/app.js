@@ -17,10 +17,12 @@ app.use(cookieParser());// For parsing cookies
 
 // Routes
 import authRoutes from "./routes/auth.route.js";
+import productsRoutes from "./routes/product.route.js";
 
 
 // routes declaration
 app.use("/api/auth",authRoutes);
+app.use("/api/products",productsRoutes);
 
 
 
