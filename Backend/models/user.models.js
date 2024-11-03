@@ -24,7 +24,7 @@ const userSchema=mongoose.Schema({
         enum:["admin","customer"],// enum is a validator used in schema definitions to ensure that a particular field can only accept values from a predefined set
         default:"customer",
     },
-    cartItem:[
+    cartItems:[
         {
             quantity:{
                 type:Number,
