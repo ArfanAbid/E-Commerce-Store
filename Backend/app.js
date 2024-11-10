@@ -21,6 +21,7 @@ import productsRoutes from "./routes/product.route.js";
 import cartRoutes from "./routes/cart.route.js";
 import couponRoutes from "./routes/coupon.route.js";
 import paymentRoutes from "./routes/payment.route.js";
+import analyticsRoutes from "./routes/analytic.route.js";
 
 
 // routes declaration
@@ -29,6 +30,7 @@ app.use("/api/products",productsRoutes);
 app.use("/api/cart",cartRoutes);
 app.use("/api/coupons",couponRoutes);
 app.use("/api/payments",paymentRoutes);
+app.use("/api/analytics",analyticsRoutes);
 
 
 
