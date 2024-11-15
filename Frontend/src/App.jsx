@@ -1,21 +1,25 @@
 import React, { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import Navbar from "./components/Navbar";
 import { Toaster } from "react-hot-toast";
 import { useUserStore } from "./stores/useUserStore";
-import { Navigate } from "react-router-dom";
 import LoadingSpinner from "./components/LoadingSpinner.jsx"
+
+
 const App = () => {
   const {user,checkAuth,checkingAuth}=useUserStore();
+  // console.log(user);
+  // console.log(checkingAuth);
 
-  // if(checkingAuth) return <LoadingSpinner/>
-
+  
   useEffect(() => { // This will run when the component mounts and whenever the checkAuth function changes
     checkAuth();
   }, [checkAuth]);
+  
+  if(checkingAuth===true) return <LoadingSpinner/>
   
   return (
     <div className="min-h-screen bg-gray-900 text-white relative overflow-hidden">

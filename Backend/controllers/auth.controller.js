@@ -1,7 +1,7 @@
 import User from "../models/user.models.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import ApiResponse from "../utils/ApiResponse.js";
-import ApiError from "../utils/ApiError.js";
+// import ApiResponse from "../utils/ApiResponse.js";
+// import ApiError from "../utils/ApiError.js";
 import jwt from "jsonwebtoken";
 import redis from "../utils/redis.js";
 
@@ -53,11 +53,11 @@ const RegisterUser=asyncHandler(async(req,res,next)=>{
     try {
         const {name,email,password}=req.body;
         if(!name || !email || !password){
-            throw new ApiError(400,"Please provide name, email and password");
+            return res.status(400).json({ message: "Please provide name, email, and password" });
         }
         const userExists=await User.findOne({email});
         if(userExists){
-            throw new ApiError(409,"User already exists");
+            return res.status(409).json({ message: "User already exists" });
         }
         const user=await User.create({
             name,
@@ -74,13 +74,13 @@ const RegisterUser=asyncHandler(async(req,res,next)=>{
     
         const createdUser=await User.findById(user._id).select("-password");
         if(!createdUser){
-            throw new ApiError(404,"User not found");
+            return res.status(404).json({ message: "User not found" });
         }
     
-        return res.status(201).json(new ApiResponse(201,createdUser,"User created successfully"));
+        return res.status(201).json({ status: 201, message: "User created successfully", data: createdUser });
     } catch (error) {
         console.log("Error in register user",error.message);
-        throw new ApiError(500,error.message);
+        return res.status(500).json({ message: error.message });
     }
 });
 
@@ -90,7 +90,7 @@ const LoginUser=asyncHandler(async(req,res,next)=>{
     try {
         const {email,password}=req.body;
         if(!email || !password){
-            throw new ApiError(400,"Please provide email and password");
+            return res.status(400).json({ message: "Please provide email and password" });
         }
 
         const user=await User.findOne({email});
@@ -99,14 +99,18 @@ const LoginUser=asyncHandler(async(req,res,next)=>{
             await storeRefreshToken(user._id,refreshToken);
             setCookies(res,accessToken,refreshToken);
 
-            return res.status(200).json(new ApiResponse(200,{_id:user._id,name:user.name,email:user.email,role:user.role},"User logged in successfully"));
+            return res.status(200).json({
+                status: 200,
+                message: "User logged in successfully",
+                data: { _id: user._id, name: user.name, email: user.email, role: user.role },
+            });
 
         }else{
-            throw new ApiError(401,"Invalid email or password");
+            return  res.status(401).json({ message: "Invalid email or password" });
         }
     } catch (error) {
         console.log("Error in login user",error.message);
-        throw new ApiError(500,error.message);
+        return res.status(500).json({ message: error.message });
     }
 });
 
@@ -123,11 +127,12 @@ const LogoutUser=asyncHandler(async(req,res,next)=>{
             }
             res.clearCookie("accessToken");
             res.clearCookie("refreshToken");
-            return res.status(200).json(new ApiResponse(200,"User logged out successfully"));
+            return res.status(200).json({ status: 200, message: "User logged out successfully" });
         }
+        return res.status(400).json({ message: "No refresh token found" });
     } catch (error) {
         console.log("Error in logout user",error.message);
-        throw new ApiError(401,error.message);
+        return res.status(500).json({ message: error.message });
     }
 
 })
@@ -137,15 +142,15 @@ const LogoutUser=asyncHandler(async(req,res,next)=>{
 const RefreshToken=asyncHandler(async(req,res,next)=>{
     const refresh=req.cookies.refreshToken;
     if(!refresh){
-        throw new ApiError(401,"Unauthorized request");
+        return res.status(401).json({ message: "Unauthorized request" });
     }
     const decoded=jwt.verify(refresh,process.env.REFRESH_TOKEN_SECRET);
     if(!decoded){
-        throw new ApiError(401,"Please login to get access");
+        return res.status(401).json({ message: "Please login to get access" });
     }
     const storedRefreshToken=await redis.get(`refreshToken:${decoded.userId}`);
     if(storedRefreshToken!==refresh){
-        throw new ApiError(401,"RefreshToken is expired or invalid");
+        return res.status(401).json({ message: "RefreshToken is expired or invalid" });
     }
     const accessToken=jwt.sign({userId:decoded.userId},process.env.ACCESS_TOKEN_SECRET,{
         expiresIn:"15m",
@@ -158,8 +163,16 @@ const RefreshToken=asyncHandler(async(req,res,next)=>{
         maxAge:15*60*1000, // 15 minutes
 
     });
-    return res.status(200).json(new ApiResponse(200,"Access token refreshed successfully"));
+    return res.status(200).json({ status: 200, message: "Access token refreshed successfully" });
 });
+
+export const getProfile = async (req, res) => {
+	try {
+		res.json(req.user);
+	} catch (error) {
+		res.status(500).json({ message: "Server error in get profile", error: error.message });
+	}
+};
 
 export {
     RegisterUser,
