@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import { Toaster } from "react-hot-toast";
 import { useUserStore } from "./stores/useUserStore";
 import LoadingSpinner from "./components/LoadingSpinner.jsx"
+import AdminPage from "./pages/AdminPage.jsx";
 
 
 const App = () => {
@@ -36,6 +37,7 @@ const App = () => {
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/signup" element={!user ? <SignUpPage /> : <Navigate to="/" />}></Route>
           <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />}></Route>
+          <Route path="/secret-dashboard" element={user?.role==="admin" ? <AdminPage /> : <Navigate to="/login" />}></Route>
         </Routes>
       </div>
       <Toaster/>

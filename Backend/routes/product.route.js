@@ -6,11 +6,11 @@ import {getAllProducts,getFeaturedProducts,createProduct,deleteProduct,getRecomm
 const router = express.Router();
 
 // Endpoints
-router.get("/",protectedRoute,adminRoute,getAllProducts);
+router.get("/getAllProducts",protectedRoute,adminRoute,getAllProducts);
 router.get("/featured",getFeaturedProducts);
 router.get("/category/:category",getProductsByCategory);
 router.get("/recommendation",getRecommendedProduct);
 router.post("/createProduct",protectedRoute,adminRoute,createProduct);
-router.patch("/:id",protectedRoute,adminRoute,toggleFeaturedProduct);
-router.delete("/:id",protectedRoute,adminRoute,createProduct,deleteProduct);
+router.patch("/toggle-Featured-Product/:id",protectedRoute,adminRoute,toggleFeaturedProduct);
+router.delete("/deleteProduct/:id",protectedRoute,adminRoute,deleteProduct);
 export default router
