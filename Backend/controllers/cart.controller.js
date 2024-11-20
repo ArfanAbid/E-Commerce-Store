@@ -12,7 +12,6 @@ export const getCartProducts=async(req,res)=>{
                 quantity:item.quantity
             }
         })
-
         res.json(cartProducts);
     } catch (error) {
         console.log("Error in get cart products",error.message);
@@ -29,7 +28,7 @@ export const addToCart=async(req,res)=>{
         if(existingItem){
             existingItem.quantity+=1;
         }else{
-            user.cartItems.push({productId,quantity:1});
+            user.cartItems.push(productId);
         }
         await user.save();
         res.json(user.cartItems);
@@ -44,9 +43,9 @@ export const removeAllFromCart=async(req,res)=>{
     try {
         const {productId}=req.body;
         const user=req.user;
-        if(!productId){
+        if(!productId){ // this is the case when we want to remove all products from cart
             user.cartItems=[];
-        }else{
+        }else{ // this is the case when we want to remove specific product from cart
             user.cartItems=user.cartItems.filter(item=>item.id!==productId);
         }
         await user.save();
@@ -68,7 +67,7 @@ export const updateQuantity=async(req,res)=>{
             if(quantity===0){// this is the case when we want to remove product from cart with quantity 0 i.e when quantity is 1 and we decrement it to 0 so it should be removed from cart
                 user.cartItems=user.cartItems.filter(item=>item.id!==productId);
                 await user.save();
-                res.json(user.cartItems);
+                return res.json(user.cartItems);
             }
             existingItem.quantity=quantity;
             await user.save();
