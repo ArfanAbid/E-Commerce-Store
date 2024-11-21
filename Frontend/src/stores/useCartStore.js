@@ -7,6 +7,7 @@ export const useCartStore = create((set,get) => ({
     coupon: null,
     total: 0,
     subTotal: 0,
+    isCouponApplied: false,
 
     getCartItems: async () => {
         try {

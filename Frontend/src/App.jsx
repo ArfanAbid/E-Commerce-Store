@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
@@ -22,16 +22,24 @@ const App = () => {
   // console.log(checkingAuth);
 
   
-  useEffect(() => { // This will run when the component mounts and whenever the checkAuth function changes
+  // Wrap `checkAuth` and `getCartItems` in useCallback
+  const performAuthCheck = useCallback(() => {
     checkAuth();
   }, [checkAuth]);
-  
-  
-  useEffect(() => {
-    if (!user) return;
-    getCartItems();
-  }, [getCartItems]);
 
+  const fetchCartItems = useCallback(() => {
+    if (user) {
+      getCartItems();
+    }
+  }, [getCartItems, user]);
+
+  useEffect(() => {
+    performAuthCheck();
+  }, [performAuthCheck]);
+
+  useEffect(() => {
+    fetchCartItems();
+  }, [fetchCartItems]);
 
   if(checkingAuth===true) return <LoadingSpinner/>
   
