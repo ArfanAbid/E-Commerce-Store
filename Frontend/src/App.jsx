@@ -13,6 +13,7 @@ import Navbar from "./components/Navbar";
 import AdminPage from "./pages/AdminPage.jsx";
 import CategoryPage from "./pages/CategoryPage.jsx";
 import CartPage from "./pages/CartPage.jsx";
+import CustomerSupport from "./pages/CustomerSupport.jsx";
 
 
 const App = () => {
@@ -61,6 +62,7 @@ const App = () => {
           <Route path="/secret-dashboard" element={user?.role==="admin" ? <AdminPage /> : <Navigate to="/login" />}></Route>
           <Route path="/category/:category" element={<CategoryPage />}></Route>
           <Route path="/cart" element={user ? <CartPage /> : <Navigate to="/login" />}></Route>
+          <Route path="/customer-Support" element={user? <CustomerSupport /> : <Navigate to="/login" />}></Route>
         </Routes>
       </div>
       <Toaster/>
