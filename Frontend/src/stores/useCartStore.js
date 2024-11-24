@@ -82,6 +82,11 @@ export const useCartStore = create((set,get) => ({
         }
     },
 
+    clearCart: async() => { // after payment successFull this function will be called to clear the cart
+        set({cart: [],coupon: null, subTotal: 0, total: 0});
+        
+    },
+
     // Function to calculate total  
     calculateTotal: () => {
         const {cart, coupon} = get();

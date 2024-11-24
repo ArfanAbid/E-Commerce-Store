@@ -26,7 +26,7 @@ export const createCheckoutSession=async(req,res)=>{
                     },
                     unit_amount: amount,
                 },
-                // quantity: product.quantity,
+                quantity: product.quantity || 1,
             };
         });
 
