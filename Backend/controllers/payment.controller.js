@@ -52,11 +52,12 @@ export const createCheckoutSession=async(req,res)=>{
                 couponCode:couponCode||"",
                 products:JSON.stringify(products.map(
                     product=>({
-                        id:product.id,
+                        id:product._id,
                         quantity:product.quantity,
                         price:product.price
                     })
                 )),
+
             },
         });
 
@@ -83,6 +84,8 @@ async function createStripeCoupon(discountPercentage){
 }
 
 async function  createNewCoupon(userId){
+    await Coupon.findOneAndDelete({userId:userId});
+    
     const newCoupon=new Coupon({
         code:"GIFT"+Math.random().toString(36).substring(2,8).toUpperCase(),
         discountPercentage:10,
@@ -112,6 +115,7 @@ export const checkoutSuccess=async(req,res)=>{
 
         // Creating a new Order
         const products=JSON.parse(session.metadata.products);
+
         const newOrder=new Order({
             user:session.metadata.userId,
             products:products.map(product=>({

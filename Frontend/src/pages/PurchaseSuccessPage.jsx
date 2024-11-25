@@ -10,11 +10,13 @@ const PurchaseSuccessPage = () => {
     const[Error, setError]=useState(null);
     const clearCart = useCartStore((state) => state.clearCart);
      
+
     useEffect(() => {
-		const handleCheckoutSuccess = async (sessionId) => {
+
+		const handleCheckoutSuccess = async (session_id) => {
 			try {
 				await axios.post("/payments/checkout-success", {
-					sessionId,
+					session_id,
 				});
 				clearCart();
 			} catch (error) {
@@ -24,13 +26,15 @@ const PurchaseSuccessPage = () => {
 			}
 		};
 
-		const sessionId = new URLSearchParams(window.location.search).get("session_id");
-		if (sessionId) {
-			handleCheckoutSuccess(sessionId);
+        const session_id = new URLSearchParams(window.location.search).get("session_id");
+		if (session_id) {
+			handleCheckoutSuccess(session_id);
 		} else {
 			setIsProcessing(false);
 			setError("No session ID found in the URL");
 		}
+
+		
 	}, [clearCart]);
 
     if (processing) {
