@@ -18,7 +18,7 @@ export const getAnalyticData=async ()=>{
 
     const {totalSales,totalRevenue}=saleData[0] || {totalSales:0,totalRevenue:0};
     return {
-        user:totalUsers,
+        users:totalUsers,
         products:totalProducts,
         totalSales,
         totalRevenue
@@ -68,14 +68,15 @@ export const getDailySalesData=async (startDate,endDate)=>{
     
         const dateArray=getDareInRange(startDate,endDate);
         // console.log(dateArray);// ['2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-05', '2023-01-06', '2023-01-07']
-        return dateArray.map(date=>{
-            const salesData=dailySalesData.find(data=>data._id===date);
-            return {
-                date,
-                sales: salesData ? salesData.sales : 0,
-                revenue: salesData ? salesData.revenue : 0,
-            }
-        })
+		return dateArray.map((date) => {
+			const foundData = dailySalesData.find((item) => item._id === date);
+
+			return {
+				date,
+				sales: foundData?.sales || 0,
+				revenue: foundData?.revenue || 0,
+			};
+		});
     } catch (error) {
         console.log("Error in get daily sales data",error.message);
         throw error
@@ -84,7 +85,7 @@ export const getDailySalesData=async (startDate,endDate)=>{
 
 
 
-const getDareInRange=async (startDate,endDate)=>{
+function getDareInRange(startDate,endDate){
     const dates=[];
 
     let currentDate=new Date(startDate);

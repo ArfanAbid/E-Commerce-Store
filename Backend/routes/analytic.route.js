@@ -8,18 +8,18 @@ const router = express.Router();
 
 router.get("/",protectedRoute,adminRoute,async(req,res)=>{
     try {
-        const analyticDta=await getAnalyticData();
+        const analyticsData=await getAnalyticData();
 
         // Now working for Analytic Graph Data
         // Graph Analytic: Basically horizontall there will be a days and on that days there will be a number of sales and revenue. So we will have to make a graph which will show the sales and revenue on a daily basis.
 
         const endDate=new Date();
         const startDate=new Date(endDate.getTime()-7*24*60*60*1000); // 7 days
-        const dailySakesData=await getDailySalesData(startDate,endDate);
+        const dailySalesData=await getDailySalesData(startDate,endDate);
 
         res.json({
-            analyticDta,
-            dailySakesData
+            analyticsData,
+            dailySalesData
         })
     } catch (error) {
         console.log("Error in get analytic data",error.message);
