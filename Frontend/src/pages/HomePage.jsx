@@ -1,8 +1,17 @@
 import React from 'react'
 import CategoryItem from '../components/CategoryItem'
-
-
+import FeaturedProducts from '../components/FeaturedProducts'
+import {useProductStore} from "../stores/useProductStore";
 const HomePage = () => {
+
+	const {fetchFeaturedProducts,products,isLoading}=useProductStore();
+	console.log(products);
+
+  React.useEffect(() => {
+	fetchFeaturedProducts();
+  }, [fetchFeaturedProducts]);
+
+
 
   const categories = [
     { href: "/jeans", name: "Jeans", imageUrl: "/jeans.jpg" },
@@ -31,7 +40,7 @@ const HomePage = () => {
 					))}
 				</div>
 
-				{/* {!isLoading && products.length > 0 && <FeaturedProducts featuredProducts={products} />} */}
+				{!isLoading && products.length > 0 && <FeaturedProducts featuredProducts={products} />}
 			</div>
 		</div>
 	);
