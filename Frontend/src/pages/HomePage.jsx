@@ -5,7 +5,7 @@ import {useProductStore} from "../stores/useProductStore";
 const HomePage = () => {
 
 	const {fetchFeaturedProducts,products,isLoading}=useProductStore();
-	console.log(products);
+	// console.log(products);
 
   React.useEffect(() => {
 	fetchFeaturedProducts();
