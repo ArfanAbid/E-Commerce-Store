@@ -1,11 +1,11 @@
 import React, { useEffect, useCallback } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, Link } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import { useUserStore } from "./stores/useUserStore";
 import { useCartStore } from "./stores/useCartStore";
 
-import LoadingSpinner from "./components/LoadingSpinner.jsx"
+import LoadingSpinner from "./components/LoadingSpinner.jsx";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -15,15 +15,13 @@ import CategoryPage from "./pages/CategoryPage.jsx";
 import CartPage from "./pages/CartPage.jsx";
 import CustomerSupport from "./pages/CustomerSupport.jsx";
 
+import { MessageCircleMore } from "lucide-react";
+import { motion } from "framer-motion"; // Import Framer Motion
 
 const App = () => {
-  const {user,checkAuth,checkingAuth}=useUserStore();
-  const {getCartItems}=useCartStore();
-  // console.log(user);
-  // console.log(checkingAuth);
+  const { user, checkAuth, checkingAuth } = useUserStore();
+  const { getCartItems } = useCartStore();
 
-  
-  // Wrap `checkAuth` and `getCartItems` in useCallback
   const performAuthCheck = useCallback(() => {
     checkAuth();
   }, [checkAuth]);
@@ -42,8 +40,8 @@ const App = () => {
     fetchCartItems();
   }, [fetchCartItems]);
 
-  if(checkingAuth===true) return <LoadingSpinner/>
-  
+  if (checkingAuth === true) return <LoadingSpinner />;
+
   return (
     <div className="min-h-screen bg-gray-900 text-white relative overflow-hidden">
       {/* Background gradient */}
@@ -59,13 +57,31 @@ const App = () => {
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/signup" element={!user ? <SignUpPage /> : <Navigate to="/" />}></Route>
           <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />}></Route>
-          <Route path="/secret-dashboard" element={user?.role==="admin" ? <AdminPage /> : <Navigate to="/login" />}></Route>
+          <Route path="/secret-dashboard" element={user?.role === "admin" ? <AdminPage /> : <Navigate to="/login" />}></Route>
           <Route path="/category/:category" element={<CategoryPage />}></Route>
           <Route path="/cart" element={user ? <CartPage /> : <Navigate to="/login" />}></Route>
-          <Route path="/customer-Support" element={user? <CustomerSupport /> : <Navigate to="/login" />}></Route>
+          <Route path="/customer-Support" element={user ? <CustomerSupport /> : <Navigate to="/login" />}></Route>
         </Routes>
       </div>
-      <Toaster/>
+
+      {/* Chat Icon */}
+      {user && (
+        <Link to="/customer-Support">
+          <motion.div
+            className="fixed bottom-6 right-6 bg-emerald-400 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-emerald-500 transition-all z-50"
+            whileHover={{ scale: 1.1 }} 
+            whileTap={{ scale: 0.9 }}  
+            initial={{ opacity: 0 }}   
+            animate={{ opacity: 1 }}   
+            transition={{ duration: 0.5 }}
+            style={{ position: 'fixed', bottom: '6%', right: '6%', zIndex: 50 }}
+          >
+            <MessageCircleMore size={24} />
+          </motion.div>
+        </Link>
+      )}
+
+      <Toaster />
     </div>
   );
 };
