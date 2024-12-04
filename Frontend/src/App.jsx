@@ -6,10 +6,10 @@ import { useUserStore } from "./stores/useUserStore";
 import { useCartStore } from "./stores/useCartStore";
 
 import LoadingSpinner from "./components/LoadingSpinner.jsx";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import SignUpPage from "./pages/SignUpPage";
-import Navbar from "./components/Navbar";
+import HomePage from "./pages/HomePage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import SignUpPage from "./pages/SignUpPage.jsx";
+import Navbar from "./components/NavBar.jsx";
 import AdminPage from "./pages/AdminPage.jsx";
 import CategoryPage from "./pages/CategoryPage.jsx";
 import CartPage from "./pages/CartPage.jsx";
