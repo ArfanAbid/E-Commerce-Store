@@ -106,7 +106,7 @@ const LoginUser=asyncHandler(async(req,res,next)=>{
             });
 
         }else{
-            return  res.status(401).json({ message: "Invalid email or password" });
+            return  res.status(400).json({ message: "Invalid email or password" }); // bec 401 is used for Refresh logic :)
         }
     } catch (error) {
         console.log("Error in login user",error.message);

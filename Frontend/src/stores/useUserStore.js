@@ -57,7 +57,59 @@ export const useUserStore = create((set,get) => ({
     }
 },
 
+refreshToken: async () => {
+    if(get().checkingAuth) return;
+
+    set({ checkingAuth: true });
+    try {
+        const res = await axios.get("/auth/refresh-token");
+        set({checkingAuth: false });
+        return res.data;
+    } catch (error) {
+        set({ checkingAuth: false, user: null });
+        if (error.response?.status !== 401) {
+            toast.error(error.message || "Something went wrong while checking auth");
+        }
+    }
+},
+
 }));
 
-// TODO: implement axios interceptors for refreshing access token
 
+// Interceptors for refresh token
+
+let refreshPromise=null;
+
+axios.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+
+    async (error) => {
+        const originalRequest = error.config;
+
+        if (error.response.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+
+            try {
+                // If refresh is already in progress, wait for it to complete
+                if(refreshPromise){
+                    await refreshPromise;
+                    return axios(originalRequest);
+                }
+                // If refresh is not in progress, start a new one
+                refreshPromise=useUserStore.getState().refreshToken();
+                await refreshPromise;
+                refreshPromise=null;
+
+                return axios(originalRequest);
+            } catch (refreshError) {
+                // If refresh token is expired or invalid, logout the user
+                useUserStore.getState().logout();
+                return Promise.reject(refreshError);
+            }
+        }
+
+        return Promise.reject(error);
+    }
+);
