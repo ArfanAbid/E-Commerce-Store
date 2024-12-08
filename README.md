@@ -2,6 +2,10 @@
 
 This is a fully functional **eCommerce store** built with the **MERN stack** and enhanced with various features for an optimized user experience. The project includes efficient backend management using **Node.js** and **Express**, along with **Redis** for caching, **AI-powered customer support**, dynamic analytics, and secure payment processing.
 
+![alt text](<Screenshot 2024-12-08 115707.png>)
+![alt text](<Screenshot 2024-12-08 115857.png>)
+
+
 ## Key Features:
 - **Redis**: Efficient caching for refresh tokens and featured products to reduce server load and improve performance.
 - **AI-Powered Support**: Real-time customer assistance using AI-based responses for instant support.
@@ -18,6 +22,7 @@ This is a fully functional **eCommerce store** built with the **MERN stack** and
 - **Payment Gateway**: Stripe
 - **Analytics**: Chart.js
 - **Customer Support**: AI-powered chatbot
+
 
 ## Installation:
 
